@@ -108,7 +108,7 @@ hl.bind(mainMod .. " + P", function()
   -- })
   -- hl.exec_scheduled_prop_refresh_immediately()
 
-  hl.exec_cmd("hyprpicker")
+  hl.exec_cmd(colorPicker)
 
   -- hl.config({
     -- decoration = {inactive_opacity = oldOpacity}

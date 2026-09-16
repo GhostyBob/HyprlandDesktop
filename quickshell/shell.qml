@@ -4,16 +4,11 @@ import Quickshell.Hyprland
 import Quickshell.Io
 import QtQuick
 import QtQuick.Layouts
-
+import "colors.js" as Colors
 
 ShellRoot {
   id: root
 
-  property color barColor: "#282828"
-  property color emptyWsColor: "#504945"
-  property color activeWsColor: "#98971a"
-  property color urgentWsColor: "#d79921"
-  property color textColor: "#ebdbb2"
   property string timeText
   
   PanelWindow {
@@ -21,7 +16,7 @@ ShellRoot {
     anchors.left: true
     anchors.right: true
     implicitHeight: 40
-    color: root.barColor
+    color: Colors.palette.bg
      
     RowLayout {
       anchors.fill: parent
@@ -31,13 +26,14 @@ ShellRoot {
         model: 10
 
         Text {
+          required property int index
           anchors.verticalCenter: parent.verticalCenter
 
           property var ws: Hyprland.workspaces.values.find(w => w.id === index + 1)
           property bool isActive: Hyprland.focusedWorkspace?.id === (index + 1)
 
           text: index + 1
-          color: isActive ? root.activeWsColor : (ws ? (ws.urgent ? root.urgentWsColor : root.textColor) : root.emptyWsColor)
+          color: isActive ? Colors.palette.green : (ws ? (ws.urgent ? Colors.palette.yellow : Colors.palette.fg) : Colors.palette.gray)
 
           font {pixelSize: 16; bold: true}
 
@@ -52,7 +48,7 @@ ShellRoot {
         anchors.verticalCenter: parent.verticalCenter
         
         text: "|"
-        color: root.textColor
+        color: Colors.palette.fg
         font {pixelSize: 18; bold: true}
       }
       
@@ -63,7 +59,7 @@ ShellRoot {
         property bool isActive: Hyprland.focusedWorkspace?.id === ("s")
 
         text: "S"
-        color: isActive ? root.activeWsColor : (ws ? root.filledWsColor : root.emptyWsColor)
+        color: isActive ? Colors.palette.green : (ws ? Colors.palette.fg : Colors.palette.gray)
 
         font {pixelSize: 16; bold: true}
 
@@ -77,7 +73,7 @@ ShellRoot {
 
       Text {
         text: root.timeText
-        color: root.textColor
+        color: Colors.palette.fg
         font {pixelSize: 16}
       }    
     }

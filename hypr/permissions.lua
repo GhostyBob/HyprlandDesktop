@@ -1,0 +1,2 @@
+-- For security reasons, my actual permissions file isn't included.
+-- See https://wiki.hypr.land/0.56.0/Configuring/Advanced-and-Cool/Permissions/ for some things you could put here.

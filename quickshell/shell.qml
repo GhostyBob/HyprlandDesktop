@@ -140,7 +140,7 @@ ShellRoot {
         root.batteryText = text.slice(15).trim()
         // Text color: 50-99 = aqua; 20-49 = orange; 0-19 = red
         var tens = root.batteryText[0]
-        root.batteryTextColor = tens > '5' ? Colors.palette.aqua : (tens > '1' ? Colors.palette.orange : Colors.palette.red)
+        root.batteryTextColor = tens >= '5' ? Colors.palette.aqua : (tens > '1' ? Colors.palette.orange : Colors.palette.red)
       }
     }
     Component.onCompleted: running = true

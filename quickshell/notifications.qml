@@ -21,7 +21,7 @@ Scope {
 
   PanelWindow {
     anchors { bottom: true; right: true }
-    margins {right: 10}
+    margins {bottom: 10}
     implicitWidth: 400
     Layout.fillHeight: true
     color: "transparent"
@@ -43,6 +43,7 @@ Scope {
           Layout.fillWidth: true
           Layout.preferredHeight: 60
           color: modelData.urgency === NotificationUrgency.Critical ? Colors.palette.red : Colors.palette.gray
+          border {color: Colors.palette.fg; width: 4}
 
           RowLayout {
             anchors.fill: parent
@@ -69,7 +70,7 @@ Scope {
                 text: popup.modelData.summary
                 elide: Text.ElideRight
                 color: Colors.palette.fg
-                font {family: Fonts.family; pixelSize: 16; bold: true}
+                font {family: Fonts.family; pixelSize: 18; bold: true}
               }
 
               // Body text

@@ -57,3 +57,6 @@ hl.window_rule({ match = { float = false, workspace = "f[1]" }, rounding = 0 })
 
 -- Set the special workspace to use Dwindle instead of Master
 hl.workspace_rule({ workspace = "s[true]", layout = "dwindle"})
+
+-- Set the workspaces on the second monitor to use Dwindle as well
+hl.workspace_rule({ workspace = "m[DP-2]", layout = "dwindle"})

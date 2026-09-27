@@ -2,6 +2,7 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Hyprland
 import Quickshell.Io
+import Quickshell.Services.UPower
 import QtQuick
 import QtQuick.Layouts
 import "colors.js" as Colors
@@ -11,8 +12,7 @@ ShellRoot {
   id: root
 
   property string timeText
-  property string batteryText
-  property color batteryTextColor
+  property var battery: UPower.displayDevice
 
   // The top bar
   PanelWindow {
@@ -65,8 +65,8 @@ ShellRoot {
       Text {
         anchors.verticalCenter: parent.verticalCenter
         
-        property var ws: Hyprland.workspaces.values.find(w => w === "s[true]")
-        property bool isActive: Hyprland.focusedWorkspace?.id === ("s")
+        property var ws: Hyprland.workspaces.values.find(w => w == "s[true]")
+        property bool isActive: Hyprland.focusedWorkspace?.id == ("s")
 
         text: "S"
         color: isActive ? Colors.palette.green : (ws ? Colors.palette.fg : Colors.palette.gray)
@@ -98,22 +98,36 @@ ShellRoot {
       // Displays the battery percentage
       Rectangle {
         id: batteryBoundingRect
-        color: Colors.palette.gray
+
+        property bool charging: root.battery.state == (UPowerDeviceState.Charging || UPowerDeviceState.FullyCharged)
+
+        color: charging ? Colors.palette.fg : Colors.palette.gray
         implicitWidth: 80
         Layout.fillHeight: true
 
         Text {
+          property var percent: root.battery.percentage
+          property bool toggled: false
+
           anchors.centerIn: parent
           verticalAlignment: Text.AlignVCenter
-          text: root.batteryText
-
-          color: root.batteryTextColor
+          
+          // Toggles between the battery percentage and time to 
+          // full charge (if charging) or time to empty (if discharging)
+          text: toggled ? 
+            (parent.charging ? 
+              (root.battery.timeToFull / 60).toFixed(1) + " m" 
+              : (root.battery.timeToEmpty / 3600).toFixed(1) + " h") 
+            : (percent * 100).toFixed(0) + " %";
+            
+          // >=50% = aqua; 20-49% = orange; <20% = red
+          color: percent >= 0.5 ? Colors.palette.aqua : (percent >= 0.2 ? Colors.palette.orange : Colors.palette.red)
           font {pixelSize: 16; family: Fonts.family; bold: true}
 
-          // Click to display time to empty instead of percentage
+          // Click to toggle between time to empty and percentage
           MouseArea {
             anchors.fill: parent
-            onClicked: batteryTimeProc.running = true
+            onClicked: parent.toggled = !parent.toggled
           }
         }
       }
@@ -123,42 +137,11 @@ ShellRoot {
   // Queries the date & time. Stores the result in timeText.
   Process {
     id: timeProc
-    command: ["date", "+%l:%M %p   %a, %m/%0d"]
+    command: ["date", "+%l:%M %p %a, %m/%0d"]
     stdout: StdioCollector {
       onStreamFinished: root.timeText = text
     }
     Component.onCompleted: running = true
-  }
-
-  // Queries the battery percentage. Stores the result in batteryText.
-  // Also sets batteryTextColor based on batteryText.
-  Process {
-    id: batteryProc
-    command: ["sh", "-c", "upower -b | grep percentage"]
-    stdout: StdioCollector {
-      onStreamFinished: () => {
-        root.batteryText = text.slice(15).trim()
-        // Text color: 50-99 = aqua; 20-49 = orange; 0-19 = red
-        var tens = root.batteryText[0]
-        root.batteryTextColor = tens >= '5' ? Colors.palette.aqua : (tens > '1' ? Colors.palette.orange : Colors.palette.red)
-      }
-    }
-    Component.onCompleted: running = true
-  }
-
-  // Queries the battery's time to empty. Stores the result in batteryText.
-  // Also sets batteryTextColor based on batteryText.
-  Process {
-    id: batteryTimeProc
-    command: ["sh", "-c", "upower -b | grep to\\ empty"]
-    stdout: StdioCollector {
-      onStreamFinished: () => {
-        root.batteryText = text.slice(18).trim().slice(0, 5)
-        // Text color: >=2 = aqua; 1-1.9 = orange; <1 = red
-        var hours = root.batteryText[0]
-        root.batteryTextColor = hours >= '2' ? Colors.palette.aqua : (hours > '1' ? Colors.palette.orange : Colors.palette.red)
-      }
-    }
   }
 
   // Periodically re-runs processes to keep things up to date.
@@ -169,7 +152,6 @@ ShellRoot {
     repeat: true
     onTriggered: () => {
       timeProc.running = true
-      batteryProc.running = true
     }
   }
 }

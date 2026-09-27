@@ -106,6 +106,7 @@ ShellRoot {
         Layout.fillHeight: true
 
         Text {
+          id: batteryText
           property var percent: root.battery.percentage
           property bool toggled: false
 
@@ -123,12 +124,12 @@ ShellRoot {
           // >=50% = aqua; 20-49% = orange; <20% = red
           color: percent >= 0.5 ? Colors.palette.aqua : (percent >= 0.2 ? Colors.palette.orange : Colors.palette.red)
           font {pixelSize: 16; family: Fonts.family; bold: true}
+        }
 
-          // Click to toggle between time to empty and percentage
-          MouseArea {
-            anchors.fill: parent
-            onClicked: parent.toggled = !parent.toggled
-          }
+        // Click to toggle between time to empty and percentage
+        MouseArea {
+          anchors.fill: parent
+          onClicked: batteryText.toggled = !batteryText.toggled
         }
       }
     }

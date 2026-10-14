@@ -5,8 +5,6 @@
 -- See https://wiki.hypr.land/Configuring/Basics/Window-Rules/
 -- and https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
 
--- Example window rules that are useful
-
 -- Ignore maximize requests from all apps.
 hl.window_rule({
     name  = "suppress-maximize-events",
@@ -45,7 +43,7 @@ hl.window_rule({
 
     move  = "20 monitor_h-120",
     float = true,
-  })
+})
 
 -- Don't have gaps around windows if there is only one window in the workspace
 hl.workspace_rule({ workspace = "w[tv1]", gaps_out = 0, gaps_in = 0 })

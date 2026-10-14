@@ -55,6 +55,9 @@ hl.window_rule({ match = { float = false, workspace = "w[tv1]" }, rounding = 0 }
 hl.window_rule({ match = { float = false, workspace = "f[1]" }, border_size = 0 })
 hl.window_rule({ match = { float = false, workspace = "f[1]" }, rounding = 0 })
 
+-- Tell windows of class "screensaver" to be fullscreen
+hl.window_rule({ match = { class = "^screensaver$"}, fullscreen = true, float = true})
+
 -- Set the special workspace to use Dwindle instead of Master
 hl.workspace_rule({ workspace = "s[true]", layout = "dwindle"})
 

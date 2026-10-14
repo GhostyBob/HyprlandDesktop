@@ -30,6 +30,7 @@ local colorPicker = "hyprpicker"
 hl.on("hyprland.start", function ()
   hl.exec_cmd("quickshell")
   hl.exec_cmd("hyprpaper")
+  hl.exec_cmd("hypridle")
 end)
 
 -------------------------------
@@ -168,6 +169,28 @@ hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
       }
     })
 
+-- Disable window blur and animations with mainMod + B
+-- Based on one of the advanced & cool scripts from the hyprland wiki.
+hl.bind(mainMod .. " + B", function ()
+  local noBlur = (hl.get_config("decoration.blur.enabled") == false)
+
+  if noBlur then
+    hl.exec_cmd("hyprctl reload")
+    return
+  end
+
+  hl.config({
+    -- Disable animations
+    animations = {
+      enabled = false,
+    },
+    -- Disable blur and window transparency
+    decoration = {
+      blur = { enabled = false },
+      inactive_opacity = 1.0,
+    }
+  })
+end)
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------

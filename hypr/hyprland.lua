@@ -10,11 +10,10 @@
 
 require("gupConfig/monitors")
 
----------------------
----- MY PROGRAMS ----
----------------------
+-------------------------
+---- PROGRAM ALIASES ----
+-------------------------
 
--- Set programs that you use
 local terminal    = "kitty"
 local fileManager = "dolphin"
 local menu = "wofi --show=drun"
@@ -29,6 +28,7 @@ local colorPicker = "hyprpicker"
 -- Autostart necessary processes (like notifications daemons, status bars, etc.)
 hl.on("hyprland.start", function ()
   hl.exec_cmd("quickshell")
+  hl.exec_cmd("qs -t ~/.config/quickshell/notifications.qml")
   hl.exec_cmd("hyprpaper")
   hl.exec_cmd("hypridle")
 end)
